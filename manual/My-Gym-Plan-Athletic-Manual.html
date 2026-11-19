@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My GYM Plan (IronTracker) — Official Athletic Manual & Developer Guide</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --bg: #ffffff;
+      --text: #09090b;
+      --text-muted: #52525b;
+      --text-subtle: #71717a;
+      --card-bg: #f8fafc;
+      --card-border: #e2e8f0;
+      --accent: #000000;
+      --accent-light: #f1f5f9;
+      --success: #16a34a;
+      --code-bg: #0f172a;
+      --code-text: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background-color: var(--bg);
+      line-height: 1.65;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    /* Print & Pagination Styles */
+    @page {
+      size: A4;
+      margin: 20mm 16mm 20mm 16mm;
+      @bottom-right {
+        content: counter(page);
+        font-size: 10px;
+        color: #71717a;
+        font-family: 'Inter', sans-serif;
+      }
+      @bottom-left {
+        content: "My GYM Plan (IronTracker) • Official Manual • CodeByTushu";
+        font-size: 10px;
+        color: #71717a;
+        font-family: 'Inter', sans-serif;
+      }
+    }
+
+    .page {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    .page-break {
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .avoid-break {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Cover Page */
+    .cover-container {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 0;
+    }
+
+    .cover-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #000000;
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .cover-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+
+    .cover-hero {
+      margin: 60px 0;
+    }
+
+    .cover-title {
+      font-size: 44px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      color: #000000;
+      margin-bottom: 14px;
+    }
+
+    .cover-subtitle {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-muted);
+      line-height: 1.4;
+      max-width: 650px;
+      margin-bottom: 24px;
+    }
+
+    .cover-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .cover-tag {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .cover-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding-top: 30px;
+      border-top: 2px solid #000000;
+    }
+
+    .meta-item h4 {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #71717a;
+      margin-bottom: 4px;
+    }
+
+    .meta-item p {
+      font-size: 14px;
+      font-weight: 700;
+      color: #000000;
+    }
+
+    .meta-item p a {
+      color: #000000;
+      text-decoration: none;
+    }
+
+    /* Table of Contents */
+    .toc-container {
+      background: #fafafa;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin: 30px 0;
+    }
+
+    .toc-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 12px;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toc-item {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .toc-link {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      text-decoration: none;
+      color: #09090b;
+      font-weight: 600;
+      font-size: 13.5px;
+      transition: color 0.2s;
+    }
+
+    .toc-link:hover {
+      color: #2563eb;
+    }
+
+    .toc-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: #71717a;
+      background: #f4f4f5;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .toc-desc {
+      font-size: 12px;
+      font-weight: 400;
+      color: #71717a;
+      margin-left: 6px;
+    }
+
+    .toc-dots {
+      flex: 1;
+      border-bottom: 1px dotted #cbd5e1;
+      margin: 0 10px;
+      min-width: 20px;
+    }
+
+    .toc-page {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: #000000;
+    }
+
+    /* Headings & Content Typography */
+    h2.chapter-header {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-top: 36px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid #000000;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-top: 22px;
+      margin-bottom: 8px;
+      color: #000000;
+    }
+
+    p {
+      margin-bottom: 12px;
+      color: #27272a;
+      line-height: 1.65;
+    }
+
+    /* Cards, Grids & Callouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #0f172a;
+    }
+
+    .card p {
+      font-size: 12.5px;
+      color: #475569;
+      margin-bottom: 0;
+    }
+
+    .callout {
+      border-left: 4px solid #000000;
+      background: #f8fafc;
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: #000000;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .callout p {
+      font-size: 12.5px;
+      color: #334155;
+      margin-bottom: 0;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 12.5px;
+    }
+
+    th {
+      background: #0f172a;
+      color: #ffffff;
+      text-align: left;
+      padding: 9px 12px;
+      font-weight: 600;
+      font-size: 11.5px;
+      letter-spacing: 0.04em;
+    }
+
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    /* Code Blocks */
+    pre, code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 14px 18px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      overflow-x: auto;
+      margin: 14px 0;
+      line-height: 1.5;
+    }
+
+    p code, li code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Lists */
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 14px;
+    }
+
+    li {
+      margin-bottom: 5px;
+      color: #334155;
+    }
+
+    /* Links */
+    a {
+      color: #0284c7;
+      text-decoration: underline;
+    }
+
+    /* Protocol Badges */
+    .set-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+    .set-7 { background: #fee2e2; color: #991b1b; }
+    .set-12 { background: #e0e7ff; color: #3730a3; }
+    .set-15 { background: #fef3c7; color: #92400e; }
+
+    .footer-note {
+      text-align: center;
+      padding: 30px 0 10px;
+      font-size: 11px;
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ==================== COVER PAGE ==================== -->
+  <div class="cover-container page-break">
+    <div>
+      <div class="cover-badge">
+        <span class="dot"></span>
+        Official Athletic & Technical Manual • v0.05.3
+      </div>
+    </div>
+
+    <div class="cover-hero">
+      <h1 class="cover-title">My GYM Plan<br><span style="font-weight: 400; color: #52525b; font-size: 32px;">(IronTracker Athletic OS)</span></h1>
+      <p class="cover-subtitle">
+        A 100% offline-first athletic training system with 7-12-15 hypertrophy science, 2-tier room calisthenics, animated biomechanical SVG guides, habit accountability, and live OTA update engine.
+      </p>
+
+      <div class="cover-tags">
+        <span class="cover-tag">Android 8.0+ Native</span>
+        <span class="cover-tag">Offline-First PWA</span>
+        <span class="cover-tag">Zero Bloat Vanilla JS</span>
+        <span class="cover-tag">SHA-256 Vault</span>
+        <span class="cover-tag">Live OTA Updates</span>
+        <span class="cover-tag">65 Dual-Angle SVG Demos</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="cover-meta-grid">
+        <div class="meta-item">
+          <h4>Publisher & Studio</h4>
+          <p><a href="https://codebytushu.com" target="_blank">CodeByTushu Studio</a></p>
+        </div>
+        <div class="meta-item">
+          <h4>Author & Lead Engineer</h4>
+          <p>Tushpendra Kumar</p>
+        </div>
+        <div class="meta-item">
+          <h4>Official App Hub</h4>
+          <p><a href="https://codebytushu.com/apps/" target="_blank">codebytushu.com/apps/</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TABLE OF CONTENTS ==================== -->
+  <div class="toc-container avoid-break" id="table-of-contents">
+    <div class="toc-title">
+      <span>Interactive Table of Contents</span>
+      <span style="font-size: 11px; font-weight: 600; color: #71717a; text-transform: uppercase;">Click topic to jump</span>
+    </div>
+
+    <ul class="toc-list">
+      <li class="toc-item">
+        <a class="toc-link" href="#chapter-1">
+          <span class="toc-num">01</span>
+          <span>Core Vision & Architectural Philosophy</span>
+          <span class="toc-desc">— 100% Offline-First, Zero Cloud Telemetry</span>
+        </a>
+        <span class="toc-dots"></span>
+        <span class="toc-page">Ch. 1</span>
+      </li>
+      <li class="toc-item">
+        <a class="toc-link" href="#chapter-2">
+          <span class="toc-num">02</span>
+          <span>The 7-12-15 Scientific Hypertrophy Protocol</span>
+          <span class="toc-desc">— Heavy (7), Hypertrophy (12), Burnout (15)</span>
+        </a>
+        <span class="toc-dots"></span>
+        <span class="toc-page">Ch. 2</span>
+      </li>
+      <li class="toc-item">
+        <a class="toc-link" href="#chapter-3">
+          <span class="toc-num">03</span>
+          <span>2-Tier Room Fitness & Calisthenics System</span>
+          <span class="toc-desc">— Daily Essentials + 48h Recovery Split</span>
+        </a>
+        <span class="toc-dots"></span>
+        <span class="toc-page">Ch. 3</span>
+      </li>
+      <li class="toc-item">
+        <a class="toc-link" href="#chapter-4">
+          <span class="toc-num">04</span>
+          <span>Biomechanical Dual-Angle SVG Vector Engine</span>
+          <span class="toc-desc">— Front & Side Angle Real-time Demos</span>
+        </a>
+        <span class="toc-dots"></span>
+        <span class="toc-page">Ch. 4</span>
+      </li>
+      <li class="toc-item">
+        <a class="toc-link" href="#chapter-5">
+          <span class="toc-num">05</span>
+          <span>Habits & Discipline Accountability Tracker</span>
+          <span class="toc-desc">— 11 Core Habits, Heatmap, ✎ Manage Mode</span>
+        </a>
+        <span class="toc-dots"></span>
+        <span class="toc-page">Ch. 5</span>
+      </li>
+      <li class="toc-item">
+        <a class="toc-link" href="#chapter-6">
+          <span class="toc-num">06</span>
+          <span>Athletic Nutrition & Macronutrient Fueling</span>
+          <span class="toc-desc">— Indian Veg & Non-Veg Meal Windows</span>
+        </a>
+        <span class="toc-dots"></span>
+        <span class="toc-page">Ch. 6</span>
+      </li>
+      <li class="toc-item">
+        <a class="toc-link" href="#chapter-7">
+          <span class="toc-num">07</span>
+          <span>Security, SHA-256 PIN Vault & Device Privacy</span>
+          <span class="toc-desc">— Goku Onboarding, Zero Telemetry</span>
+        </a>
+        <span class="toc-dots"></span>
+        <span class="toc-page">Ch. 7</span>
+      </li>
+      <li class="toc-item">
+        <a class="toc-link" href="#chapter-8">
+          <span class="toc-num">08</span>
+          <span>Data Governance & Backup / Restore Engine</span>
+          <span class="toc-desc">— JSON Snapshot, 6-Month Retention, Hard Reset</span>
+        </a>
+        <span class="toc-dots"></span>
+        <span class="toc-page">Ch. 8</span>
+      </li>
+      <li class="toc-item">
+        <a class="toc-link" href="#chapter-9">
+          <span class="toc-num">09</span>
+          <span>Hybrid Live Over-The-Air (OTA) Updates</span>
+          <span class="toc-desc">— Atomic Staging Swap, Zero APK Reinstall</span>
+        </a>
+        <span class="toc-dots"></span>
+        <span class="toc-page">Ch. 9</span>
+      </li>
+      <li class="toc-item">
+        <a class="toc-link" href="#chapter-10">
+          <span class="toc-num">10</span>
+          <span>Installation Guide, FAQ & Developer Ecosystem</span>
+          <span class="toc-desc">— APK Sideloading, GitHub Repos & Website</span>
+        </a>
+        <span class="toc-dots"></span>
+        <span class="toc-page">Ch. 10</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ==================== CHAPTER 1 ==================== -->
+  <div class="page-break" id="chapter-1">
+    <h2 class="chapter-header">01. Core Vision & Architectural Philosophy</h2>
+    <p>
+      <strong>My GYM Plan (IronTracker)</strong> was engineered with a clear mission: <em>to deliver an uncompromising, military-grade athletic tracker that respects athlete privacy, eliminates cloud bloat, and operates at maximum speed under any condition.</em>
+    </p>
+
+    <div class="grid-3 avoid-break">
+      <div class="card">
+        <h4>🔒 100% Offline-First</h4>
+        <p>No mandatory logins, zero third-party trackers, and no cloud databases. Your training weights, PIN, and habits never leave your physical device.</p>
+      </div>
+      <div class="card">
+        <h4>⚡ Zero-Framework Speed</h4>
+        <p>Built with pure Vanilla ES6+ and modern CSS3. Startup time is under 50ms with a solid 60 FPS scrolling and zero battery-draining overhead.</p>
+      </div>
+      <div class="card">
+        <h4>🔄 Hybrid Live OTA</h4>
+        <p>Receives instant updates, new exercises, and UI upgrades Over-The-Air directly from GitHub without ever needing to reinstall the APK.</p>
+      </div>
+    </div>
+
+    <div class="callout avoid-break">
+      <div class="callout-title">The Problem with Mainstream Fitness Apps</div>
+      <p>
+        Most commercial gym trackers are cluttered with subscription paywalls, intrusive ads, mandatory email signups, and heavy analytics SDKs that drain battery life and fail when you enter an underground gym with poor reception. My GYM Plan is designed as a standalone athletic operating system: launch it anywhere, anytime, completely offline.
+      </p>
+    </div>
+
+    <h3>Monochrome Apple Design System</h3>
+    <p>
+      The user interface strictly adheres to a minimalist monochrome aesthetic (pure white, deep black, and frosted glass blurs). All purple tints and distracting gradients have been eradicated. Controls are high-contrast, text is razor sharp, and buttons provide tactile native haptic feedback.
+    </p>
+  </div>
+
+  <!-- ==================== CHAPTER 2 ==================== -->
+  <div class="page-break" id="chapter-2">
+    <h2 class="chapter-header">02. The 7-12-15 Scientific Hypertrophy Protocol</h2>
+    <p>
+      Unlike generic 3x10 workout trackers, My GYM Plan organizes resistance training around the scientifically proven <strong>7-12-15 Protocol</strong>. This three-stage periodization targets all muscle fiber types (Type IIx, Type IIa, and Type I) in a single unified workout session.
+    </p>
+
+    <div class="grid-3 avoid-break">
+      <div class="card">
+        <span class="set-badge set-7">SET 1: POWER SET</span>
+        <h4 style="margin-top: 8px;">7 Heavy Reps</h4>
+        <p>80–85% 1RM. Recruits high-threshold motor units, triggers mechanical tension, and stimulates raw myofibrillar strength adaptations.</p>
+      </div>
+      <div class="card">
+        <span class="set-badge set-12">SET 2: GROWTH SET</span>
+        <h4 style="margin-top: 8px;">12 Moderate Reps</h4>
+        <p>65–70% 1RM. Maximizes muscle hypertrophy, sarcoplasmic expansion, and time-under-tension with strict concentric/eccentric tempo control.</p>
+      </div>
+      <div class="card">
+        <span class="set-badge set-15">SET 3: BURNOUT DROP</span>
+        <h4 style="margin-top: 8px;">15 Fast Reps</h4>
+        <p>50% 1RM drop set. Floods tissue with blood, drives metabolite accumulation (lactate/hydrogen ions), and produces extreme cellular swelling (the pump).</p>
+      </div>
+    </div>
+
+    <h3>Full 6-Day Elite Split Schedule</h3>
+    <table class="avoid-break">
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Primary Target</th>
+          <th>Focus Exercises</th>
+          <th>Key Muscle Activation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Monday</strong></td>
+          <td>Chest & Front Delts</td>
+          <td>Flat Barbell Bench, Incline DB Press, Cable Flyes</td>
+          <td>Pectoralis Major/Minor, Anterior Deltoid</td>
+        </tr>
+        <tr>
+          <td><strong>Tuesday</strong></td>
+          <td>Back & Rear Delts</td>
+          <td>Deadlift, Lat Pulldowns, Seated Cable Rows</td>
+          <td>Latissimus Dorsi, Rhomboids, Trapezius</td>
+        </tr>
+        <tr>
+          <td><strong>Wednesday</strong></td>
+          <td>Shoulders & Traps</td>
+          <td>Overhead Press, Lateral Raises, Face Pulls</td>
+          <td>Lateral Deltoid, Posterior Deltoid, Rotator Cuff</td>
+        </tr>
+        <tr>
+          <td><strong>Thursday</strong></td>
+          <td>Biceps & Triceps</td>
+          <td>Barbell Curls, Tricep Rope Pushdowns, Hammer Curls</td>
+          <td>Biceps Brachii, Brachialis, Triceps Lateral/Long head</td>
+        </tr>
+        <tr>
+          <td><strong>Friday</strong></td>
+          <td>Legs & Calves</td>
+          <td>Barbell Back Squats, Leg Press, Romanian Deadlift</td>
+          <td>Quadriceps, Hamstrings, Gluteus, Gastrocnemius</td>
+        </tr>
+        <tr>
+          <td><strong>Saturday</strong></td>
+          <td>Core & Functional Cardio</td>
+          <td>Hanging Leg Raises, Cable Woodchoppers, Planks</td>
+          <td>Rectus Abdominis, Internal/External Obliques</td>
+        </tr>
+        <tr>
+          <td><strong>Sunday</strong></td>
+          <td>Full Athletic Rest</td>
+          <td>Active Walking, Mobility, Hydration, Sleep</td>
+          <td>Central Nervous System (CNS) Supercompensation</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout avoid-break">
+      <div class="callout-title">Intelligent Set Flow & Rest Timers</div>
+      <p>
+        The app dynamically records your logged weights and reps. Checking off a completed set automatically fires the integrated athletic rest timer (configured for 60s, 90s, or 120s) with audio chimes and native Android haptic pulses to enforce strict inter-set recovery.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== CHAPTER 3 ==================== -->
+  <div class="page-break" id="chapter-3">
+    <h2 class="chapter-header">03. 2-Tier Room Fitness & Calisthenics System</h2>
+    <p>
+      For athletes unable to reach a commercial gym or those building foundational functional strength, My GYM Plan features a proprietary <strong>2-Tier Room Fitness & Calisthenics Engine</strong>.
+    </p>
+
+    <div class="grid-2 avoid-break">
+      <div class="card">
+        <h4>Tier 1: Daily Essentials (Non-Negotiable)</h4>
+        <p>
+          High-frequency, low-fatigue habit anchors executed every single day. Includes 10 Standard Push-ups, 10 Hindu Baithak (Bodyweight Squats), 60s Core Plank, and Doorframe Rows. Designed to stimulate synovial joint fluid and baseline metabolic rate.
+        </p>
+      </div>
+      <div class="card">
+        <h4>Tier 2: Weekly Calisthenics Split (48h Recovery)</h4>
+        <p>
+          Progressive bodyweight strength training split across dedicated focus days (Upper Body Push/Pull, Hollow Body Core, Lower Body Explosiveness) paired with strict 48-hour muscle recovery locks to prevent overtraining.
+        </p>
+      </div>
+    </div>
+
+    <h3>The 48-Hour Physiological Recovery Lock</h3>
+    <p>
+      Muscle protein synthesis (MPS) remains elevated for approximately 24 to 48 hours post-workout. If an athlete trains their chest on Monday, the app dynamically locks intensive push movements for Tuesday and surfaces active recovery cues, ensuring muscle fibers heal and grow thicker before undergoing subsequent mechanical stress.
+    </p>
+
+    <div class="callout avoid-break">
+      <div class="callout-title">Sunday Sacred Rest Day</div>
+      <p>
+        On Sundays, the Room Fitness interface automatically transitions into a dedicated <strong>Active Recovery Mode</strong>. High-impact routines are disabled, replaced by guided mobility drills, hydration tracking, and nervous system restorative breathing.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== CHAPTER 4 ==================== -->
+  <div class="page-break" id="chapter-4">
+    <h2 class="chapter-header">04. Biomechanical Dual-Angle SVG Vector Engine</h2>
+    <p>
+      Rather than relying on heavy video players or laggy animated GIFs that consume hundreds of megabytes of storage, My GYM Plan contains a custom <strong>Mathematical Vector Biomechanics Engine</strong> with 65 animated exercises across 19 categories.
+    </p>
+
+    <div class="grid-2 avoid-break">
+      <div class="card">
+        <h4>Front Angle Biomechanics (0° Perspective)</h4>
+        <p>
+          Renders bilateral symmetry, grip width, elbow flare angles, and lateral balance. Highlights primary and secondary muscle recruitment in real-time pulsing color schemes.
+        </p>
+      </div>
+      <div class="card">
+        <h4>Side Angle Biomechanics (90° Profile)</h4>
+        <p>
+          Completely distinct SVG geometry illustrating spinal alignment, pelvic tilt, knee tracking past toes, and bar path trajectory throughout the concentric and eccentric phases.
+        </p>
+      </div>
+    </div>
+
+    <h3>Integrated Anatomical Guide Specs</h3>
+    <table class="avoid-break">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Exercises Rendered</th>
+          <th>Front View Focus</th>
+          <th>Side Profile Focus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Push-ups & Press</strong></td>
+          <td>Standard, Diamond, Incline, Decline, Pike</td>
+          <td>Chest width, Hand placement</td>
+          <td>Elbow 45° angle, Lumbar neutral</td>
+        </tr>
+        <tr>
+          <td><strong>Squats & Baithak</strong></td>
+          <td>Bodyweight, Sumo, Pistol, Hindu Baithak</td>
+          <td>Stance width, Knee valgus prevention</td>
+          <td>Femur parallel to floor, Torso angle</td>
+        </tr>
+        <tr>
+          <td><strong>Pulls & Rows</strong></td>
+          <td>Pull-ups, Chin-ups, Doorframe Rows, Inverted</td>
+          <td>Scapular depression, Lat engagement</td>
+          <td>Chest to bar line, Shoulder retraction</td>
+        </tr>
+        <tr>
+          <td><strong>Core & Planks</strong></td>
+          <td>Standard Plank, Hollow Body, Mountain Climbers</td>
+          <td>Shoulder-wrist alignment</td>
+          <td>Anti-extension hollow pelvic lock</td>
+        </tr>
+        <tr>
+          <td><strong>Dips & Triceps</strong></td>
+          <td>Chair Dips, Parallel Bar Dips, Extensions</td>
+          <td>Shoulder pack, Arm spacing</td>
+          <td>90° elbow flexion, Torso lean</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout avoid-break">
+      <div class="callout-title">Interactive Exercise Customizer</div>
+      <p>
+        Every exercise card features a <em>"View Biomechanical Guide"</em> button that opens an Apple frosted-glass modal with movement cadence, target muscles, form tips, and an <strong>"Edit Details"</strong> button allowing athletes to customize target sets, reps, or personal notes.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== CHAPTER 5 ==================== -->
+  <div class="page-break" id="chapter-5">
+    <h2 class="chapter-header">05. Habits & Discipline Accountability Tracker</h2>
+    <p>
+      Physical transformation is the direct byproduct of daily micro-habits. The <strong>Habits & Discipline Dashboard</strong> operates as an automated behavioral feedback loop.
+    </p>
+
+    <h3>11 Core Athletic Habits Tracked</h3>
+    <div class="grid-3 avoid-break">
+      <div class="card">
+        <h4>⏰ Wake up at 05:00</h4>
+        <p>Circadian rhythm consistency for peak cortisol and testosterone production.</p>
+      </div>
+      <div class="card">
+        <h4>🏋️ Gym / Training</h4>
+        <p>Completion of assigned 7-12-15 or calisthenics daily volume.</p>
+      </div>
+      <div class="card">
+        <h4>🥗 Clean Athlete Diet</h4>
+        <p>Meeting macronutrient protein and clean caloric thresholds.</p>
+      </div>
+      <div class="card">
+        <h4>💧 3+ Liters Water</h4>
+        <p>Cellular hydration for protein synthesis and joint health.</p>
+      </div>
+      <div class="card">
+        <h4>📖 Reading / Learning</h4>
+        <p>30 minutes of athletic, coding, or personal development study.</p>
+      </div>
+      <div class="card">
+        <h4>💻 Deep Work / Study</h4>
+        <p>Focused cognitive sessions free of phone interruptions.</p>
+      </div>
+      <div class="card">
+        <h4>📵 Social Media Detox</h4>
+        <p>Elimination of dopamine-depleting passive digital consumption.</p>
+      </div>
+      <div class="card">
+        <h4>📋 Day Plan & Budget</h4>
+        <p>Morning priority listing and daily financial awareness.</p>
+      </div>
+      <div class="card">
+        <h4>🚿 Cold Shower</h4>
+        <p>Vagus nerve stimulation, norepinephrine boost, and recovery.</p>
+      </div>
+      <div class="card">
+        <h4>😴 7.5+ Hours Sleep</h4>
+        <p>Deep REM sleep for muscle rebuilding and growth hormone release.</p>
+      </div>
+      <div class="card">
+        <h4>⚡ Custom Habits</h4>
+        <p>User-defined personal routines (Meditation, Walking, Mobility, etc.).</p>
+      </div>
+      <div class="card">
+        <h4>📊 Daily Score %</h4>
+        <p>Automated real-time calculation of daily completion percentage.</p>
+      </div>
+    </div>
+
+    <h3>The ✎ Manage Mode (Inline Add, Edit, and Delete)</h3>
+    <p>
+      Added in version <code>v0.05.2</code>, the Habits card includes an interactive <strong>✎ Manage</strong> toggle:
+    </p>
+    <ul class="avoid-break">
+      <li><strong>Manage Mode Activation:</strong> Tapping <em>"✎ Manage"</em> reveals direct action buttons alongside every habit item.</li>
+      <li><strong>Delete Functionality (✕):</strong> Tapping the red cross instantly deletes accidental additions (e.g. redundant items) with automatic score recalculation.</li>
+      <li><strong>Edit Functionality (✎):</strong> Tapping the pencil icon opens a pre-filled editor modal allowing changes to the habit name, category icon, and description.</li>
+      <li><strong>Custom Habit Creation (+ Add Habit):</strong> Athletes can add unlimited custom routines that seamlessly participate in weekly streak charts and monthly heatmaps.</li>
+    </ul>
+  </div>
+
+  <!-- ==================== CHAPTER 6 ==================== -->
+  <div class="page-break" id="chapter-6">
+    <h2 class="chapter-header">06. Athletic Nutrition & Macronutrient Fueling</h2>
+    <p>
+      Training stimulus without proper substrate availability leads to fatigue and muscle catabolism. My GYM Plan incorporates an athletic nutrition engine calibrated for high-protein Indian diets.
+    </p>
+
+    <h3>Macro Target Breakdown</h3>
+    <table class="avoid-break">
+      <thead>
+        <tr>
+          <th>Macronutrient</th>
+          <th>Daily Target</th>
+          <th>Primary Role</th>
+          <th>Key Indian Food Sources</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Protein</strong></td>
+          <td>1.6 – 2.2g per kg bodyweight</td>
+          <td>Muscle protein synthesis & repair</td>
+          <td>Paneer, Soya Chunks, Tofu, Eggs, Whey, Dal/Sprouts</td>
+        </tr>
+        <tr>
+          <td><strong>Carbohydrates</strong></td>
+          <td>3.0 – 4.5g per kg bodyweight</td>
+          <td>Muscle glycogen replenishment</td>
+          <td>Brown Rice, Oats, Roti, Sweet Potatoes, Bananas</td>
+        </tr>
+        <tr>
+          <td><strong>Fats</strong></td>
+          <td>0.8 – 1.0g per kg bodyweight</td>
+          <td>Hormonal production (Testosterone)</td>
+          <td>Desi Ghee, Almonds, Walnuts, Peanut Butter, Chia seeds</td>
+        </tr>
+        <tr>
+          <td><strong>Hydration</strong></td>
+          <td>3.5 – 4.0 Liters</td>
+          <td>Cell volumization & waste filtration</td>
+          <td>Clean Filtered Water, Coconut Water, Electrolytes</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="grid-2 avoid-break">
+      <div class="card">
+        <h4>Pre-Workout Timing (45–60 min prior)</h4>
+        <p>Complex carbs + moderate protein: Oats with sliced banana or brown bread with peanut butter. Fuels ATP glycolysis without digestive heaviness.</p>
+      </div>
+      <div class="card">
+        <h4>Post-Workout Window (Within 45 min)</h4>
+        <p>Rapid absorbing protein + fast glycogen source: 1 scoop whey protein or 50g boiled soya chunks paired with white rice or fruit to halt cortisol spikes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CHAPTER 7 ==================== -->
+  <div class="page-break" id="chapter-7">
+    <h2 class="chapter-header">07. Security, SHA-256 PIN Vault & Device Privacy</h2>
+    <p>
+      My GYM Plan implements a zero-trust, device-only security architecture. There is no remote authentication server, no cloud credential harvesting, and no third-party tracking pixels.
+    </p>
+
+    <h3>Goku Ultra Instinct Onboarding & PIN Vault</h3>
+    <p>
+      On initial startup, athletes complete the <strong>Goku Ultra Instinct Onboarding</strong>, setting up their profile, dietary preferences, and a 4-digit master PIN.
+    </p>
+
+    <div class="callout avoid-break">
+      <div class="callout-title">Client-Side Cryptographic Hashing</div>
+      <p>
+        The athlete's PIN is never stored in plain text. It is processed using client-side <strong>SHA-256 cryptographic hashing</strong> via the native browser <code>crypto.subtle.digest('SHA-256', ...)</code> API. When an athlete enters their PIN to unlock their profile or authorize a hard reset, the app hashes the input and compares hashes locally.
+      </p>
+    </div>
+
+    <pre><code>// SHA-256 PIN Encryption Engine (Zero Server Leakage)
+async function hashAthletePin(rawPin) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(rawPin + "_tushu_salt_2026");
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}</code></pre>
+  </div>
+
+  <!-- ==================== CHAPTER 8 ==================== -->
+  <div class="page-break" id="chapter-8">
+    <h2 class="chapter-header">08. Data Governance & Backup / Restore Engine</h2>
+    <p>
+      Because My GYM Plan runs 100% offline, data governance features are engineered to ensure athletes maintain complete ownership and portability of their workout history.
+    </p>
+
+    <h3>1. JSON Backup Snapshot & Seamless Restore</h3>
+    <p>
+      Athletes can export their complete training life into a standardized JSON file (<code>my-gym-plan-backup.json</code>). This backup contains:
+    </p>
+    <ul class="avoid-break">
+      <li>All 14 internal localStorage keys (<code>tushu_gym_*</code>, <code>tushu_habits_*</code>, <code>tushu_room_fitness_v1</code>).</li>
+      <li>Workout logs, personal best weights, and custom routine modifications.</li>
+      <li>Habit history logs, active streaks, and completion scores.</li>
+      <li>Athlete onboarding profile and encrypted PIN hash.</li>
+    </ul>
+
+    <h3>2. 6-Month Automated Log Retention Policy</h3>
+    <p>
+      To prevent database bloat and ensure instantaneous app performance on older Android devices, the app includes an optional <strong>6-Month Auto-Cleanup Engine</strong>. When activated, log records older than 180 days (ISO <code>YYYY-MM-DD</code>) are automatically pruned while preserving all-time PR records and current month metrics.
+    </p>
+
+    <h3>3. PIN-Protected Hard Reset (Clear Device Data)</h3>
+    <p>
+      Should an athlete wish to hand over their phone or start a brand new training phase, the <em>"Clear Device Data"</em> control cleanly purges all 14 local storage partitions only after confirming the athlete's SHA-256 PIN.
+    </p>
+  </div>
+
+  <!-- ==================== CHAPTER 9 ==================== -->
+  <div class="page-break" id="chapter-9">
+    <h2 class="chapter-header">09. Hybrid Live Over-The-Air (OTA) Updates</h2>
+    <p>
+      The crowning engineering achievement of My GYM Plan is its <strong>Hybrid Live OTA Engine</strong>. Traditionally, Android WebView apps require distributing a new <code>.apk</code> file whenever a web bug is fixed or a new feature is added. My GYM Plan eliminates this friction completely.
+    </p>
+
+    <div class="callout avoid-break">
+      <div class="callout-title">How Live OTA Works (Under the Hood)</div>
+      <p>
+        1. <strong>Manifest Verification:</strong> App polls <code>https://raw.githubusercontent.com/Tushpendra-Kumar/my-gym-plan/main/ota-manifest.json</code>.<br>
+        2. <strong>Differential Check:</strong> If the remote <code>buildNumber</code> is greater than local build, the app surfaces an update alert.<br>
+        3. <strong>Background Asset Download:</strong> Android's native Java layer downloads all modified assets into an isolated staging directory (<code>ota_staging/</code>).<br>
+        4. <strong>Atomic Swap:</strong> Once verified, <code>ota_staging/</code> is atomically swapped into active <code>ota_www/</code>.<br>
+        5. <strong>Instant Reload:</strong> WebView refreshes to the new version in under 2 seconds. Zero APK reinstall required!
+      </p>
+    </div>
+
+    <h3>OTA State Machine Overview</h3>
+    <table class="avoid-break">
+      <thead>
+        <tr>
+          <th>State ID</th>
+          <th>UI Status Message</th>
+          <th>Action Required</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>idle</code></td>
+          <td>Version v0.05.3 Active</td>
+          <td>Tap <em>"Check for Updates"</em></td>
+        </tr>
+        <tr>
+          <td><code>checking</code></td>
+          <td>Connecting to GitHub CDN...</td>
+          <td>Automatic</td>
+        </tr>
+        <tr>
+          <td><code>ota_available</code></td>
+          <td>New Live Update Available!</td>
+          <td>Tap <em>"⬇ Install Live Update Now"</em></td>
+        </tr>
+        <tr>
+          <td><code>downloading</code></td>
+          <td>Downloading assets (X of Y)...</td>
+          <td>Automatic background thread</td>
+        </tr>
+        <tr>
+          <td><code>applied</code></td>
+          <td>Update installed successfully!</td>
+          <td>Instant reload (Done)</td>
+        </tr>
+        <tr>
+          <td><code>apk_required</code></td>
+          <td>Native Android Engine Upgrade</td>
+          <td>Direct link to download new APK</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ==================== CHAPTER 10 ==================== -->
+  <div class="avoid-break" id="chapter-10">
+    <h2 class="chapter-header">10. Installation Guide, FAQ & Developer Ecosystem</h2>
+
+    <h3>Step-by-Step Android APK Installation</h3>
+    <ol>
+      <li>Visit the official CodeByTushu Apps Hub: <a href="https://codebytushu.com/apps/" target="_blank">codebytushu.com/apps/</a>.</li>
+      <li>Locate the <strong>IronTracker — Gym & Workout Logger</strong> card and click <strong>"Download APK"</strong>.</li>
+      <li>When prompted by Android with <em>"File might be harmful"</em>, tap <strong>"Download anyway"</strong> (standard prompt for non-Play Store sideloaded APKs).</li>
+      <li>Open the downloaded APK and tap <strong>"Install"</strong> (allow "Install Unknown Apps" permission for your browser if prompted).</li>
+      <li>Launch <strong>My GYM Plan</strong>, complete the Goku Ultra Instinct onboarding, and begin training!</li>
+    </ol>
+
+    <h3>Frequently Asked Questions (FAQ)</h3>
+    <div class="card" style="margin-bottom: 10px;">
+      <h4>Q: Does the app require an internet connection?</h4>
+      <p>A: No! The entire workout logger, calisthenics module, SVG animations, habits tracker, and food planner function 100% offline. Internet is only used when you optionally tap "Check for Updates".</p>
+    </div>
+    <div class="card" style="margin-bottom: 10px;">
+      <h4>Q: What happens if I accidentally delete a habit?</h4>
+      <p>A: You can tap "+ Add Habit" at any time to recreate custom habits or restore standard habits from a saved JSON backup.</p>
+    </div>
+    <div class="card" style="margin-bottom: 10px;">
+      <h4>Q: Where can developers find the documentation and architecture?</h4>
+      <p>A: The official developer repository is publicly accessible on GitHub at: <a href="https://github.com/CodeByTushu/my-gym-plan-docs" target="_blank">github.com/CodeByTushu/my-gym-plan-docs</a>.</p>
+    </div>
+
+    <div class="footer-note">
+      <p><strong>My GYM Plan (IronTracker)</strong> • Built with precision & discipline by <a href="https://codebytushu.com">CodeByTushu Studio</a></p>
+      <p>© 2026 CodeByTushu • All rights reserved • Lead Architect: Tushpendra Kumar</p>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
